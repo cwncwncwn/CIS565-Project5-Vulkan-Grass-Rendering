@@ -5,6 +5,9 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "Image.h"
+#include <chrono>
+#include <iostream>
+#include <string>
 
 Device* device;
 SwapChain* swapChain;
@@ -12,6 +15,9 @@ Renderer* renderer;
 Camera* camera;
 
 namespace {
+    double lastTime = 0.0;
+    int frameCount = 0;
+
     void resizeCallback(GLFWwindow* window, int width, int height) {
         if (width == 0 || height == 0) return;
 
@@ -62,6 +68,21 @@ namespace {
 
             previousY = yPosition;
         }
+    }
+}
+
+void updateWindowTitleWithFPS(GLFWwindow* window) {
+    double currentTime = glfwGetTime();
+    frameCount++;
+
+    // Calculate FPS every second
+    if (currentTime - lastTime >= 1.0) {
+        double fps = frameCount / (currentTime - lastTime);
+        std::string title = "Vulkan Grass Rendering - FPS: " + std::to_string(static_cast<int>(fps));
+        std::cout << title << std::endl;
+        glfwSetWindowTitle(window, title.c_str());
+        frameCount = 0;
+        lastTime = currentTime;
     }
 }
 
@@ -143,10 +164,14 @@ int main() {
     glfwSetMouseButtonCallback(GetGLFWWindow(), mouseDownCallback);
     glfwSetCursorPosCallback(GetGLFWWindow(), mouseMoveCallback);
 
+     lastTime = glfwGetTime();
+
     while (!ShouldQuit()) {
         glfwPollEvents();
         scene->UpdateTime();
         renderer->Frame();
+
+        updateWindowTitleWithFPS(GetGLFWWindow());
     }
 
     vkDeviceWaitIdle(device->GetVkDevice());
