@@ -11,6 +11,8 @@ Vulkan Grass Rendering
 
 This project is a Vulkan-based grass simulator and renderer that uses compute shaders for efficient physics calculations on Bezier curves to represent individual grass blades. To optimize rendering, I have used compute shaders to cull unnecessary blades per frame, passing only relevant blades to the graphics pipeline. In the graphics pipeline, I used custom shaders to handle each stage: a vertex shader transforms Bezier control points, tessellation shaders dynamically generate grass geometry, and a fragment shader shades the blades for final visual effects.
 
+This project is an implementation of the paper, [Responsive Real-Time Grass Rendering for General 3D Scenes](https://www.cg.tuwien.ac.at/research/publications/2017/JAHRMANN-2017-RRTG/JAHRMANN-2017-RRTG-draft.pdf)
+
 ![](img/result-grass.gif)
 
 ### Features
